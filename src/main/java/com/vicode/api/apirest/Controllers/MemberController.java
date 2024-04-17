@@ -98,6 +98,7 @@ public ResponseEntity<byte[]> generateCredential(@PathVariable Long id) {
 
             Map<EncodeHintType, Object> hints = new HashMap<>();
             hints.put(EncodeHintType.CHARACTER_SET, "UTF-8");
+            System.out.println(baseUrl + "/members/" + member.getId());
             String info = baseUrl + "/members/" + member.getId();
             BitMatrix matrix = new QRCodeWriter().encode(info, BarcodeFormat.QR_CODE, 225, 225, hints);
 
