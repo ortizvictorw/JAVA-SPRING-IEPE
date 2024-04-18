@@ -83,7 +83,7 @@ public class MemberController {
 
     @GetMapping("/generate-credential/{id}")
 public ResponseEntity<byte[]> generateCredential(@PathVariable Long id) {
-    String QR_CODE_FOLDER = "src/main/resources/static/qr-codes/";
+    String QR_CODE_FOLDER = "src/main/resources/static/";
 
     try {
         // Buscar el miembro en la base de datos o donde estén almacenados los datos del miembro
