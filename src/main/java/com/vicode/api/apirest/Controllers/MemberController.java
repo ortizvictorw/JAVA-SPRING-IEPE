@@ -6,10 +6,10 @@ import org.xhtmlrenderer.pdf.ITextRenderer;
 
 import com.vicode.api.apirest.Repositories.MemberRepository;
 
-
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -52,68 +52,88 @@ public class MemberController {
     public List<Member> getAllMembers() {
         return memberRepository.findAll();
     }
-    
+
     @PostMapping
-    public Member postMember(@RequestBody Member member) {        
+    public Member postMember(@RequestBody Member member) {
         return memberRepository.save(member);
     }
 
     @GetMapping("/{id}")
-    public Member getOneMember(@PathVariable Long id ) {
-        return memberRepository.findById(id).orElseThrow(()-> new RuntimeException(id + " - Not Found"));
+    public Member getOneMember(@PathVariable Long id) {
+        return memberRepository.findById(id).orElseThrow(() -> new RuntimeException(id + " - Not Found"));
     }
-    
 
-     @PutMapping("/{id}")
-      public Member putMember(@PathVariable Long id, @RequestBody Member memberDetail) {  
-        Member member = memberRepository.findById(id).orElseThrow(()-> new RuntimeException(id + " - Not Found"));
+    @PutMapping("/{id}")
+    public Member putMember(@PathVariable Long id, @RequestBody Member memberDetail) {
+        Member member = memberRepository.findById(id).orElseThrow(() -> new RuntimeException(id + " - Not Found"));
         member.setFirsName(memberDetail.getFirsName());
         member.setLastName(memberDetail.getLastName());
         member.setMemberNumber(memberDetail.getMemberNumber());
 
         return memberRepository.save(member);
-    } 
+    }
 
     @DeleteMapping("/{id}")
-    public String deleteMember(@PathVariable Long id){
-         Member member = memberRepository.findById(id).orElseThrow(()-> new RuntimeException(id + " - Not Found"));
-         memberRepository.delete(member);
-         return "Delete productId - " + id;
+    public String deleteMember(@PathVariable Long id) {
+        Member member = memberRepository.findById(id).orElseThrow(() -> new RuntimeException(id + " - Not Found"));
+        memberRepository.delete(member);
+        return "Delete productId - " + id;
     }
 
     @GetMapping("/generate-credential/{id}")
-public ResponseEntity<byte[]> generateCredential(@PathVariable Long id) {
-    String QR_CODE_FOLDER = "src/main/resources/static/";
+    public ResponseEntity<byte[]> generateCredential(@PathVariable Long id) {
+        try {
+            // Buscar el miembro en la base de datos o donde estén almacenados los datos del
+            // miembro
+            Member member = memberRepository.findById(id)
+                    .orElseThrow(() -> new RuntimeException(id + " - Not Found"));
 
-    try {
-        // Buscar el miembro en la base de datos o donde estén almacenados los datos del miembro
-        Member member = memberRepository.findById(id).orElseThrow(() -> new RuntimeException(id + " - Not Found"));
-
-        // Cargar el contenido del archivo HTML
-        ClassPathResource resource = new ClassPathResource("templates/credential_template.html");
-        byte[] htmlBytes = resource.getInputStream().readAllBytes();
-        String htmlTemplate = new String(htmlBytes, StandardCharsets.UTF_8);
-
-        //Generar QR
-
-            Map<EncodeHintType, Object> hints = new HashMap<>();
-            hints.put(EncodeHintType.CHARACTER_SET, "UTF-8");
-            System.out.println(baseUrl + "/members/" + member.getId());
+            // Generar el código QR en memoria
             String info = baseUrl + "/members/" + member.getId();
-            BitMatrix matrix = new QRCodeWriter().encode(info, BarcodeFormat.QR_CODE, 225, 225, hints);
+            byte[] qrBytes = generateQRCode(info);
 
-            // Guardar el código QR en la carpeta especificada
-            String qrFileName = "qr_" + member.getId() + ".png";
-            File qrFile = new File(QR_CODE_FOLDER + qrFileName);
-            MatrixToImageWriter.writeToStream(matrix, "PNG", new FileOutputStream(qrFile));
+            // Cargar el contenido del archivo HTML
+            String htmlTemplate = loadHtmlTemplate("templates/credential_template.html");
 
-        // Reemplazar los placeholders con los valores del miembro
-        htmlTemplate = htmlTemplate.replace("{{memberNumber}}", String.valueOf(member.getMemberNumber()));
-        htmlTemplate = htmlTemplate.replace("{{firstName}}", member.getFirsName());
-        htmlTemplate = htmlTemplate.replace("{{lastName}}", member.getLastName());
-        htmlTemplate = htmlTemplate.replace("{{memberId}}", String.valueOf(member.getId()));
+            // Reemplazar los placeholders con los valores del miembro en el HTML
+            htmlTemplate = replacePlaceholders(htmlTemplate, member, qrBytes);
 
-        // Convertir el documento HTML a PDF
+            // Convertir el documento HTML a PDF
+            byte[] pdfBytes = generatePDF(htmlTemplate);
+
+            // Devolver el PDF como respuesta
+            return ResponseEntity.ok().contentType(MediaType.APPLICATION_PDF).body(pdfBytes);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.internalServerError().build();
+        }
+    }
+
+    private byte[] generateQRCode(String info) throws WriterException, IOException {
+        Map<EncodeHintType, Object> hints = new HashMap<>();
+        hints.put(EncodeHintType.CHARACTER_SET, "UTF-8");
+        BitMatrix matrix = new QRCodeWriter().encode(info, BarcodeFormat.QR_CODE, 225, 225, hints);
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        MatrixToImageWriter.writeToStream(matrix, "PNG", outputStream);
+        return outputStream.toByteArray();
+    }
+
+    private String loadHtmlTemplate(String templatePath) throws IOException {
+        ClassPathResource resource = new ClassPathResource(templatePath);
+        byte[] htmlBytes = resource.getInputStream().readAllBytes();
+        return new String(htmlBytes, StandardCharsets.UTF_8);
+    }
+
+    private String replacePlaceholders(String htmlTemplate, Member member, byte[] qrBytes) {
+        return htmlTemplate
+                .replace("{{memberNumber}}", String.valueOf(member.getMemberNumber()))
+                .replace("{{firstName}}", member.getFirsName())
+                .replace("{{lastName}}", member.getLastName())
+                .replace("{{memberId}}", String.valueOf(member.getId()))
+                .replace("{{qrCode}}", "data:image/png;base64," + Base64.getEncoder().encodeToString(qrBytes));
+    }
+
+    private byte[] generatePDF(String htmlTemplate) throws DocumentException, IOException {
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         ITextRenderer renderer = new ITextRenderer();
         renderer.setDocumentFromString(htmlTemplate);
@@ -121,14 +141,7 @@ public ResponseEntity<byte[]> generateCredential(@PathVariable Long id) {
         renderer.createPDF(outputStream);
         renderer.finishPDF();
         outputStream.close();
-        byte[] pdfBytes = outputStream.toByteArray();
-
-        // Devolver el PDF como respuesta
-        return ResponseEntity.ok().contentType(MediaType.APPLICATION_PDF).body(pdfBytes);
-    } catch (IOException | DocumentException | WriterException e) {
-        e.printStackTrace();
-        return ResponseEntity.internalServerError().build();
+        return outputStream.toByteArray();
     }
-}
 
 }
