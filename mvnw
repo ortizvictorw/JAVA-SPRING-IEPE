@@ -133,7 +133,7 @@ if [ -z "$JAVA_HOME" ] ; then
 fi
 
 # traverses directory structure from process work directory to filesystem root
-# first directory with .mvn subdirectory is considered project base directory
+# firstt directory with .mvn subdirectory is considered project base directory
 find_maven_basedir() {
   if [ -z "$1" ]
   then

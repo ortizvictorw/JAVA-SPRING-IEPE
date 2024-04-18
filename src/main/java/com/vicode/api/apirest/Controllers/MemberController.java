@@ -35,9 +35,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
-import java.io.File;
-import java.io.FileOutputStream;
-
 @RestController
 @RequestMapping("/members")
 public class MemberController {
@@ -66,10 +63,10 @@ public class MemberController {
     @PutMapping("/{id}")
     public Member putMember(@PathVariable Long id, @RequestBody Member memberDetail) {
         Member member = memberRepository.findById(id).orElseThrow(() -> new RuntimeException(id + " - Not Found"));
-        member.setFirsName(memberDetail.getFirsName());
+        member.setFirstName(memberDetail.getFirstName());
         member.setLastName(memberDetail.getLastName());
         member.setMemberNumber(memberDetail.getMemberNumber());
-
+        member.setImageBase64(memberDetail.getImageBase64());
         return memberRepository.save(member);
     }
 
@@ -92,11 +89,14 @@ public class MemberController {
             String info = baseUrl + "/members/" + member.getId();
             byte[] qrBytes = generateQRCode(info);
 
+            // Obtener la imagen en formato base64 desde la base de datos
+            byte[] imageBytes = getImageFromBase64(member.getImageBase64());
+
             // Cargar el contenido del archivo HTML
             String htmlTemplate = loadHtmlTemplate("templates/credential_template.html");
 
             // Reemplazar los placeholders con los valores del miembro en el HTML
-            htmlTemplate = replacePlaceholders(htmlTemplate, member, qrBytes);
+            htmlTemplate = replacePlaceholders(htmlTemplate, member, qrBytes, imageBytes);
 
             // Convertir el documento HTML a PDF
             byte[] pdfBytes = generatePDF(htmlTemplate);
@@ -109,6 +109,10 @@ public class MemberController {
         }
     }
 
+    private byte[] getImageFromBase64(String base64Image) {
+        return Base64.getDecoder().decode(base64Image);
+    }
+    
     private byte[] generateQRCode(String info) throws WriterException, IOException {
         Map<EncodeHintType, Object> hints = new HashMap<>();
         hints.put(EncodeHintType.CHARACTER_SET, "UTF-8");
@@ -124,15 +128,24 @@ public class MemberController {
         return new String(htmlBytes, StandardCharsets.UTF_8);
     }
 
-    private String replacePlaceholders(String htmlTemplate, Member member, byte[] qrBytes) {
+    private String replacePlaceholders(String htmlTemplate, Member member, byte[] qrBytes, byte[] imageBytes) {
+        String memberNumber = member.getMemberNumber() != null ? String.valueOf(member.getMemberNumber()) : "";
+        String firstName = member.getFirstName() != null ? member.getFirstName() : "";
+        String lastName = member.getLastName() != null ? member.getLastName() : "";
+        String memberId = member.getId() != null ? String.valueOf(member.getId()) : "";
+    
+        String qrCode = qrBytes != null ? "data:image/png;base64," + Base64.getEncoder().encodeToString(qrBytes) : "";
+        String image = imageBytes != null ? "data:image/png;base64," + Base64.getEncoder().encodeToString(imageBytes) : "";
+    
         return htmlTemplate
-                .replace("{{memberNumber}}", String.valueOf(member.getMemberNumber()))
-                .replace("{{firstName}}", member.getFirsName())
-                .replace("{{lastName}}", member.getLastName())
-                .replace("{{memberId}}", String.valueOf(member.getId()))
-                .replace("{{qrCode}}", "data:image/png;base64," + Base64.getEncoder().encodeToString(qrBytes));
+                .replace("{{memberNumber}}", memberNumber)
+                .replace("{{firstName}}", firstName)
+                .replace("{{lastName}}", lastName)
+                .replace("{{memberId}}", memberId)
+                .replace("{{qrCode}}", qrCode)
+                .replace("{{image}}", image);
     }
-
+    
     private byte[] generatePDF(String htmlTemplate) throws DocumentException, IOException {
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         ITextRenderer renderer = new ITextRenderer();

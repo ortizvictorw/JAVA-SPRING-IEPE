@@ -1,5 +1,6 @@
 package com.vicode.api.apirest.Entities;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -11,20 +12,29 @@ public class Member {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String firsName;
+    private String firstName;
     private String lastName;
     private Long memberNumber;
+    @Column(columnDefinition = "TEXT")
+    private String imageBase64;;
+
     public Long getId() {
         return id;
     }
     public void setId(Long id) {
         this.id = id;
     }
-    public String getFirsName() {
-        return firsName;
+    public String getFirstName() {
+        return firstName;
     }
-    public void setFirsName(String firsName) {
-        this.firsName = firsName;
+    public String getImageBase64() {
+        return imageBase64;
+    }
+    public void setImageBase64(String imageBase64) {
+        this.imageBase64 = imageBase64;
+    }
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
     }
     public String getLastName() {
         return lastName;
