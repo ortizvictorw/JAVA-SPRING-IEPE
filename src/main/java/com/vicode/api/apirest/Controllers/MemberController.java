@@ -63,13 +63,22 @@ public class MemberController {
     @PutMapping("/{id}")
     public Member putMember(@PathVariable Long id, @RequestBody Member memberDetail) {
         Member member = memberRepository.findById(id).orElseThrow(() -> new RuntimeException(id + " - Not Found"));
+    
         member.setFirstName(memberDetail.getFirstName());
         member.setLastName(memberDetail.getLastName());
         member.setMemberNumber(memberDetail.getMemberNumber());
         member.setImageBase64(memberDetail.getImageBase64());
+        member.setDateOfBirth(memberDetail.getDateOfBirth()); // Ajuste para fecha de nacimiento
+        member.setAddress(memberDetail.getAddress()); // Ajuste para dirección
+        member.setPosition(memberDetail.getPosition()); // Ajuste para cargo
+        member.setActivity(memberDetail.getActivity()); // Ajuste para actividad
+        member.setDateOfJoiningChurch(memberDetail.getDateOfJoiningChurch()); // Ajuste para fecha de ingreso a la iglesia
+        member.setDateOfBaptism(memberDetail.getDateOfBaptism()); // Ajuste para fecha de bautismo
+        member.setStatus(memberDetail.getStatus()); // Ajuste para estado
+    
         return memberRepository.save(member);
     }
-
+    
     @DeleteMapping("/{id}")
     public String deleteMember(@PathVariable Long id) {
         Member member = memberRepository.findById(id).orElseThrow(() -> new RuntimeException(id + " - Not Found"));
