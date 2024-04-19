@@ -118,10 +118,6 @@ public class MemberController {
         }
     }
 
-    private byte[] getImageFromBase64(String base64Image) {
-        return Base64.getDecoder().decode(base64Image);
-    }
-    
     private byte[] generateQRCode(String info) throws WriterException, IOException {
         Map<EncodeHintType, Object> hints = new HashMap<>();
         hints.put(EncodeHintType.CHARACTER_SET, "UTF-8");
@@ -142,19 +138,18 @@ public class MemberController {
         String firstName = member.getFirstName() != null ? member.getFirstName() : "";
         String lastName = member.getLastName() != null ? member.getLastName() : "";
         String memberId = member.getId() != null ? String.valueOf(member.getId()) : "";
-    
         String qrCode = qrBytes != null ? "data:image/png;base64," + Base64.getEncoder().encodeToString(qrBytes) : "";
-        //String image = imageBytes != null ? "data:image/png;base64," +  Base64.getEncoder().encodeToString(imageBytes) : "";
         String image = imageBytes != null ? imageBytes : "";
 
-    
         return htmlTemplate
                 .replace("{{memberNumber}}", memberNumber)
                 .replace("{{firstName}}", firstName)
                 .replace("{{lastName}}", lastName)
                 .replace("{{memberId}}", memberId)
                 .replace("{{qrCode}}", qrCode)
-                .replace("{{image}}", image);
+                .replace("{{image}}", image)
+                .replace("{{title}}", member.getFirstName() + member.getLastName());
+
     }
     
     private byte[] generatePDF(String htmlTemplate) throws DocumentException, IOException {
