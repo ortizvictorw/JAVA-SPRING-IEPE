@@ -90,7 +90,7 @@ public class MemberController {
             byte[] qrBytes = generateQRCode(info);
 
             // Obtener la imagen en formato base64 desde la base de datos
-            byte[] imageBytes = getImageFromBase64(member.getImageBase64());
+            String imageBytes = member.getImageBase64();
 
             // Cargar el contenido del archivo HTML
             String htmlTemplate = loadHtmlTemplate("templates/credential_template.html");
@@ -128,14 +128,16 @@ public class MemberController {
         return new String(htmlBytes, StandardCharsets.UTF_8);
     }
 
-    private String replacePlaceholders(String htmlTemplate, Member member, byte[] qrBytes, byte[] imageBytes) {
+    private String replacePlaceholders(String htmlTemplate, Member member, byte[] qrBytes, String imageBytes) {
         String memberNumber = member.getMemberNumber() != null ? String.valueOf(member.getMemberNumber()) : "";
         String firstName = member.getFirstName() != null ? member.getFirstName() : "";
         String lastName = member.getLastName() != null ? member.getLastName() : "";
         String memberId = member.getId() != null ? String.valueOf(member.getId()) : "";
     
         String qrCode = qrBytes != null ? "data:image/png;base64," + Base64.getEncoder().encodeToString(qrBytes) : "";
-        String image = imageBytes != null ? "data:image/png;base64," +  Base64.getEncoder().encodeToString(imageBytes) : "";
+        //String image = imageBytes != null ? "data:image/png;base64," +  Base64.getEncoder().encodeToString(imageBytes) : "";
+        String image = imageBytes != null ? imageBytes : "";
+
     
         return htmlTemplate
                 .replace("{{memberNumber}}", memberNumber)
