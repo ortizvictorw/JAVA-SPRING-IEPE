@@ -135,7 +135,7 @@ public class MemberController {
         String memberId = member.getId() != null ? String.valueOf(member.getId()) : "";
     
         String qrCode = qrBytes != null ? "data:image/png;base64," + Base64.getEncoder().encodeToString(qrBytes) : "";
-        String image = imageBytes != null ?  Base64.getEncoder().encodeToString(imageBytes) : "";
+        String image = imageBytes != null ? "data:image/png;base64," +  Base64.getEncoder().encodeToString(imageBytes) : "";
     
         return htmlTemplate
                 .replace("{{memberNumber}}", memberNumber)
