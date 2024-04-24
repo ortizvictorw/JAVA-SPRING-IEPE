@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Lista de instrumentos para el día {{day}}</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #f4f4f4;
+        margin: 0;
+        padding: 0;
+      }
+
+      .container {
+        max-width: 600px;
+        margin: 20px auto;
+        background-color: #fff;
+        padding: 20px;
+        border-radius: 5px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      }
+
+      h1 {
+        color: #333;
+        text-align: center;
+      }
+
+      ul {
+        list-style-type: none;
+        padding: 0;
+      }
+
+      li {
+        margin-bottom: 10px;
+        padding: 10px;
+        background-color: #f9f9f9;
+        border-radius: 3px;
+      }
+
+      li:nth-child(odd) {
+        background-color: #e9e9e9;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1 class="logo">
+        <div>
+          <div>
+            <img
+              src="src/main/resources/static/logo.png"
+              alt=""
+              width="50"
+              height="50"
+            />
+          </div>
+          <div><strong>IEPE</strong></div>
+        </div>
+      </h1>
+      <h1>Lista de instrumentos: {{day}}</h1>
+      <ul>
+        <li>Teclado 1: {{keyboard1}}</li>
+        <li>Teclado 2: {{keyboard2}}</li>
+        <li>Guitarra 1: {{guitar1}}</li>
+        <li>Guitarra 2: {{guitar2}}</li>
+        <li>Bajo: {{bass}}</li>
+        <li>Batería: {{drums}}</li>
+      </ul>
+      <p>{{date}}</p>
+    </div>
+  </body>
+</html>
