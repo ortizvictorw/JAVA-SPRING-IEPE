@@ -5,6 +5,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.PrePersist;
+
 import java.util.Date;
 
 @Entity
@@ -94,5 +96,12 @@ public class ListEntity {
 
     public void setDate(Date date) {
         this.date = date;
+    }
+
+    @PrePersist
+    public void onPrePersist() {
+        if (this.date == null) {
+            this.date = new Date();
+        }
     }
 }
