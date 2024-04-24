@@ -80,10 +80,10 @@ public class MemberController {
     }
     
     @DeleteMapping("/{id}")
-    public String deleteMember(@PathVariable Long id) {
+    public Member deleteMember(@PathVariable Long id) {
         Member member = memberRepository.findById(id).orElseThrow(() -> new RuntimeException(id + " - Not Found"));
         memberRepository.delete(member);
-        return "Delete productId - " + id;
+        return member;
     }
 
     @GetMapping("/generate-credential/{id}")
