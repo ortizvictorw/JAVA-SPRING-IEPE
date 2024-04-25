@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html lang="es">
 
 <head>
@@ -8,8 +9,10 @@
             background-color: #ffffff;
             padding: 3rem;
             display: flex;
-            justify-content: start;
+            justify-content: center;
             align-items: center;
+            min-height: 100vh;
+            margin: 0;
         }
 
         .container {
@@ -41,6 +44,7 @@
         ul {
             list-style-type: none;
             padding: 0;
+            text-align: start;
         }
 
         li {
@@ -49,6 +53,7 @@
             background-color: #f9f9f9;
             border-radius: 5px;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            text-align: left;
         }
 
         li:nth-child(odd) {
@@ -59,7 +64,7 @@
             font-style: italic;
             color: #666;
             margin-top: 30px;
-            font-size: 14px;
+            font-size: 20px;
         }
 
         .verse {
@@ -80,27 +85,23 @@
             <div>
                 <strong>IEPE</strong>
             </div>
-
         </h1>
-        <h1 style="
-        text-align: start;">Lista de músicos dia: {{day}}</h1>
+        <h1>Lista de músicos para el día: {{day}}</h1>
         <ul>
-            <li><strong>Teclado 1:</strong> {{keyboard1}}</li>
-            <li><strong>Teclado 2:</strong> {{keyboard2}}</li>
-            <li><strong>Guitarra 1:</strong> {{guitar1}}</li>
-            <li><strong>Guitarra 2:</strong> {{guitar2}}</li>
-            <li><strong>Bajo:</strong> {{bass}}</li>
-            <li><strong>Batería:</strong> {{drums}}</li>
+            <li><strong>TECLADO 1: </strong> {{keyboard1}}</li>
+            <li><strong>TECLADO 2: </strong> {{keyboard2}}</li>
+            <li><strong>GUITARRA 1: </strong> {{guitar1}}</li>
+            <li><strong>GUITARRA 2: </strong> {{guitar2}}</li>
+            <li><strong>BAJO: </strong> {{bass}}</li>
+            <li><strong>BATERIA: </strong> {{drums}}</li>
         </ul>
         <p>{{date}}</p>
         <p class="verse">
             "Porque yo sé los planes que tengo para ustedes, planes de bienestar y
             no de calamidad, para darles un futuro y una esperanza."
-        <p>
-            <strong>
-                Jeremías 29:11
-            </strong>
         </p>
+        <p>
+            <strong>Jeremías 29:11</strong>
         </p>
     </div>
 </body>
