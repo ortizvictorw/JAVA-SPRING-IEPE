@@ -1,109 +1,117 @@
 <!DOCTYPE html>
 <html lang="es">
-
-<head>
+  <head>
     <title>Lista de músicos para el día {{day}}</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #ffffff;
-            padding: 3rem;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            margin: 0;
-        }
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #ffffff;
+        padding: 3rem;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        margin: 0;
+      }
 
-        .container {
-            width: 95%;
-            background-color: #fff;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            text-align: center;
-        }
+      .container {
+        width: 95%;
+        background-color: #fff;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        text-align: center;
+        justify-content: center;
+      }
 
-        .logo {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 20px;
-        }
+      .logo {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 20px;
+        /* Añade la propiedad background-image con la URL de tu logo */
+        background-image: url("src/main/resources/static/logo.png");
+        /* Define el tamaño del contenedor para que coincida con el logo */
+        width: 33px;
+        height: 50px;
+        /* Ajusta el tamaño del logo si es necesario */
+        background-size: cover;
+        background-repeat: no-repeat;
+        text-align: center;
+        margin: 0 auto;
+        padding: 3rem;
+      }
 
-        img {
-            margin-right: 10px;
-            border-radius: 50%;
-        }
+      img {
+        margin-right: 10px;
+        border-radius: 50%;
+      }
 
-        h1 {
-            color: #333;
-            margin-bottom: 20px;
-        }
+      h1 {
+        color: rgb(31, 14, 14);
+        margin-bottom: 20px;
+      }
 
-        ul {
-            list-style-type: none;
-            padding: 0;
-            text-align: start;
-        }
+      ul {
+        list-style-type: none;
+        padding: 0;
+        text-align: start;
+      }
 
-        li {
-            margin-bottom: 10px;
-            padding: 10px;
-            background-color: #f9f9f9;
-            border-radius: 5px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-            text-align: left;
-        }
+      li {
+        margin-bottom: 10px;
+        padding: 10px;
+        background-color: #f9f9f9;
+        border-radius: 5px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        text-align: left;
+      }
 
-        li:nth-child(odd) {
-            background-color: #e9e9e9;
-        }
+      li:nth-child(odd) {
+        background-color: #e9e9e9;
+      }
 
-        p {
-            font-style: italic;
-            color: #666;
-            margin-top: 30px;
-            font-size: 20px;
-        }
+      p {
+        font-style: italic;
+        color: #666;
+        margin-top: 30px;
+        font-size: 20px;
+      }
 
-        .verse {
-            font-style: italic;
-            font-size: 18px;
-            color: #444;
-            margin-top: 20px;
-        }
+      .verse {
+        font-style: italic;
+        font-size: 18px;
+        color: #444;
+        margin-top: 20px;
+      }
     </style>
-</head>
+  </head>
 
-<body>
+  <body>
     <div class="container">
-        <h1 class="logo">
-            <div>
-                <img src="src/main/resources/static/logo-2.png" alt="" width="70" height="70" />
-            </div>
-            <div>
-                <strong>IEPE</strong>
-            </div>
-        </h1>
-        <h1>Lista de músicos para el día: {{day}}</h1>
-        <ul>
-            <li><strong>TECLADO 1: </strong> {{keyboard1}}</li>
-            <li><strong>TECLADO 2: </strong> {{keyboard2}}</li>
-            <li><strong>GUITARRA 1: </strong> {{guitar1}}</li>
-            <li><strong>GUITARRA 2: </strong> {{guitar2}}</li>
-            <li><strong>BAJO: </strong> {{bass}}</li>
-            <li><strong>BATERIA: </strong> {{drums}}</li>
-        </ul>
-        <p>{{date}}</p>
-        <p class="verse">
-            "Porque yo sé los planes que tengo para ustedes, planes de bienestar y
-            no de calamidad, para darles un futuro y una esperanza."
-        </p>
-        <p>
-            <strong>Jeremías 29:11</strong>
-        </p>
-    </div>
-</body>
+      <div class="logo">
+        <h1>
+        <strong>IEPE</strong>
+    </h1>
+</div>
 
+      <h1>Lista de músicos para el día: {{day}}</h1>
+      <ul>
+        <li><strong>TECLADO 1: </strong> {{keyboard1}}</li>
+        <li><strong>TECLADO 2: </strong> {{keyboard2}}</li>
+        <li><strong>GUITARRA 1: </strong> {{guitar1}}</li>
+        <li><strong>GUITARRA 2: </strong> {{guitar2}}</li>
+        <li><strong>BAJO: </strong> {{bass}}</li>
+        <li><strong>BATERIA: </strong> {{drums}}</li>
+      </ul>
+      <p>{{date}}</p>
+      <p class="verse">
+        "Porque yo sé los planes que tengo para ustedes, planes de bienestar y
+        no de calamidad, para darles un futuro y una esperanza."
+      </p>
+      <p>
+        <strong>Jeremías 29:11</strong>
+      </p>
+    </div>
+  </body>
 </html>
