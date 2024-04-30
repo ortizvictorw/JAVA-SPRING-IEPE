@@ -39,7 +39,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 @RequestMapping("/members")
 public class MemberController {
 
-    @Value("${base.url}")
+    @Value("${base.datasource.url.front}")
     private String baseUrl;
 
     @Autowired
@@ -96,7 +96,7 @@ public class MemberController {
                     .orElseThrow(() -> new RuntimeException(id + " - Not Found"));
 
             // Generar el código QR en memoria
-            String info = baseUrl + "/members/" + member.getId();
+            String info = baseUrl + "/members/status/" + member.getId();
             byte[] qrBytes = generateQRCode(info);
 
             // Obtener la imagen en formato base64 desde la base de datos

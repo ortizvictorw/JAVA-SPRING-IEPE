@@ -1,5 +1,12 @@
-{"properties": [{
-  "name": "base.url",
-  "type": "java.lang.String",
-  "description": "A description for 'base.url'"
-}]}
+{"properties": [
+  {
+    "name": "base.url",
+    "type": "java.lang.String",
+    "description": "A description for 'base.url'"
+  },
+  {
+    "name": "base.datasource.url.front",
+    "type": "java.lang.String",
+    "description": "A description for 'base.datasource.url.front'"
+  }
+]}
