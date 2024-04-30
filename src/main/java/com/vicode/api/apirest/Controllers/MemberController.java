@@ -63,19 +63,20 @@ public class MemberController {
     @PutMapping("/{id}")
     public Member putMember(@PathVariable Long id, @RequestBody Member memberDetail) {
         Member member = memberRepository.findById(id).orElseThrow(() -> new RuntimeException(id + " - Not Found"));
-    
+
         member.setFirstName(memberDetail.getFirstName());
         member.setLastName(memberDetail.getLastName());
-        member.setMemberNumber(memberDetail.getMemberNumber());
-        member.setImageBase64(memberDetail.getImageBase64());
-        member.setDateOfBirth(memberDetail.getDateOfBirth()); // Ajuste para fecha de nacimiento
-        member.setAddress(memberDetail.getAddress()); // Ajuste para dirección
-        member.setPosition(memberDetail.getPosition()); // Ajuste para cargo
-        member.setActivity(memberDetail.getActivity()); // Ajuste para actividad
-        member.setDateOfJoiningChurch(memberDetail.getDateOfJoiningChurch()); // Ajuste para fecha de ingreso a la iglesia
-        member.setDateOfBaptism(memberDetail.getDateOfBaptism()); // Ajuste para fecha de bautismo
-        member.setStatus(memberDetail.getStatus()); // Ajuste para estado
-    
+        member.setTelephone(memberDetail.getTelephone());
+        member.setAvatar(memberDetail.getAvatar());
+        member.setDateOfBirth(memberDetail.getDateOfBirth());
+        member.setAddress(memberDetail.getAddress());
+        member.setPosition(memberDetail.getPosition());
+        member.setDateOfJoiningChurch(memberDetail.getDateOfJoiningChurch());
+        member.setDateOfBaptism(memberDetail.getDateOfBaptism());
+        member.setStatus(memberDetail.getStatus());
+        member.setMaritalStatus(memberDetail.getMaritalStatus());
+        member.setAge(memberDetail.getAge());
+
         return memberRepository.save(member);
     }
     
@@ -99,7 +100,7 @@ public class MemberController {
             byte[] qrBytes = generateQRCode(info);
 
             // Obtener la imagen en formato base64 desde la base de datos
-            String imageBytes = member.getImageBase64();
+            String imageBytes = member.getAvatar();
 
             // Cargar el contenido del archivo HTML
             String htmlTemplate = loadHtmlTemplate("templates/credential_template.html");
@@ -134,7 +135,6 @@ public class MemberController {
     }
 
     private String replacePlaceholders(String htmlTemplate, Member member, byte[] qrBytes, String imageBytes) {
-        String memberNumber = member.getMemberNumber() != null ? String.valueOf(member.getMemberNumber()) : "";
         String firstName = member.getFirstName() != null ? member.getFirstName() : "";
         String lastName = member.getLastName() != null ? member.getLastName() : "";
         String memberId = member.getId() != null ? String.valueOf(member.getId()) : "";
@@ -142,7 +142,6 @@ public class MemberController {
         String image = imageBytes != null ? imageBytes : "";
 
         return htmlTemplate
-                .replace("{{memberNumber}}", memberNumber)
                 .replace("{{firstName}}", firstName)
                 .replace("{{lastName}}", lastName)
                 .replace("{{memberId}}", memberId)
