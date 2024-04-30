@@ -26,7 +26,7 @@ public class Member {
     private String status;
     private String maritalStatus; // Agregar campo para estado civil
     private String telephone; // Agregar campo para teléfono
-    private int age; // Agregar campo para edad
+    private Long age; // Agregar campo para edad
 
     // Getters y setters para los campos
     public Long getId() {
@@ -133,11 +133,11 @@ public class Member {
         this.telephone = telephone;
     }
 
-    public int getAge() {
+    public Long getAge() {
         return age;
     }
 
-    public void setAge(int age) {
+    public void setAge(Long age) {
         this.age = age;
     }
 }
