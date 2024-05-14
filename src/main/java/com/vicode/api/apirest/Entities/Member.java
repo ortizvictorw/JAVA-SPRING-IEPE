@@ -27,10 +27,19 @@ public class Member {
     private String maritalStatus; // Agregar campo para estado civil
     private String telephone; // Agregar campo para teléfono
     private Long age; // Agregar campo para edad
+    private String dni;
 
     // Getters y setters para los campos
     public Long getId() {
         return id;
+    }
+
+    public String getDni() {
+        return dni;
+    }
+
+    public void setDni(String dni) {
+        this.dni = dni;
     }
 
     public void setId(Long id) {

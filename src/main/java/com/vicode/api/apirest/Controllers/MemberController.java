@@ -119,6 +119,34 @@ public class MemberController {
         }
     }
 
+    @PostMapping("/generate-credential")
+    public ResponseEntity<byte[]> generateCredentialMongo(@RequestBody Member member) {
+        System.out.println(member.getDni());
+        try {
+            // Generar el código QR en memoria
+            String info = baseUrl + "/members/status/" + member.getDni();
+            byte[] qrBytes = generateQRCode(info);
+
+            // Obtener la imagen en formato base64 desde la base de datos
+            String imageBytes = member.getAvatar();
+
+            // Cargar el contenido del archivo HTML
+            String htmlTemplate = loadHtmlTemplate("templates/credential_template.html");
+
+            // Reemplazar los placeholders con los valores del miembro en el HTML
+            htmlTemplate = replacePlaceholders(htmlTemplate, member, qrBytes, imageBytes);
+
+            // Convertir el documento HTML a PDF
+            byte[] pdfBytes = generatePDF(htmlTemplate);
+
+            // Devolver el PDF como respuesta
+            return ResponseEntity.ok().contentType(MediaType.APPLICATION_PDF).body(pdfBytes);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.internalServerError().build();
+        }
+    }
+
     private byte[] generateQRCode(String info) throws WriterException, IOException {
         Map<EncodeHintType, Object> hints = new HashMap<>();
         hints.put(EncodeHintType.CHARACTER_SET, "UTF-8");
